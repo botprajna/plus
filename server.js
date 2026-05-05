@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import OpenAI from 'openai';
+import * as undici from 'undici';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,6 +10,15 @@ const host = process.env.HOST || '0.0.0.0';
 app.use(express.json());
 app.use(express.static('public'));
 
+const proxyUrl = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;
+
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+  fetchOptions: proxyUrl
+    ? { dispatcher: new undici.ProxyAgent(proxyUrl) }
+    : undefined
+});
+
 app.post('/api/chat', async (req, res) => {
   const { message } = req.body;
 
@@ -16,33 +26,19 @@ app.post('/api/chat', async (req, res) => {
     return res.status(400).json({ error: 'message is required' });
   }
 
-  if (!process.env.OPENAI_API_KEY) {
-    return res.status(500).json({ error: 'OPENAI_API_KEY is not configured' });
-  }
-
   try {
-    const client = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
-    });
-
     const response = await client.responses.create({
-      model: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
-      input: [
-        {
-          role: 'system',
-          content: 'You are a helpful assistant for a web app prototype. Answer clearly and briefly.'
-        },
-        {
-          role: 'user',
-          content: message
-        }
-      ]
+      model: process.env.OPENAI_MODEL || 'gpt-5.5',
+      instructions: 'You are a helpful assistant for a web app prototype. Answer clearly and briefly.',
+      input: message
     });
 
     res.json({ reply: response.output_text });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'AI request failed' });
+    console.error('OpenAI request failed:', error);
+    res.status(error.status || 500).json({
+      error: error.message || 'AI request failed'
+    });
   }
 });
 
