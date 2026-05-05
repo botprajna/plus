@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 
 const app = express();
 const port = process.env.PORT || 3000;
+const host = process.env.HOST || '0.0.0.0';
 
 app.use(express.json());
 app.use(express.static('public'));
@@ -45,6 +46,6 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`AI web starter running at http://localhost:${port}`);
+app.listen(port, host, () => {
+  console.log(`AI web starter running at http://${host}:${port}`);
 });

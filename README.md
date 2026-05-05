@@ -21,6 +21,7 @@ copy .env.example .env
 ```env
 OPENAI_API_KEY=你的_key
 OPENAI_MODEL=gpt-4.1-mini
+HOST=0.0.0.0
 PORT=3000
 ```
 
@@ -35,6 +36,23 @@ npm run dev
 ```text
 http://localhost:3000
 ```
+
+## 公网访问
+
+如果你有公网 IP，要让别人访问，通常还需要：
+
+1. 服务监听 `0.0.0.0`
+2. 路由器或云主机安全组放行 `3000` 端口
+3. Windows 防火墙放行 Node.js 或端口 `3000`
+
+外网访问地址通常是：
+
+```text
+http://你的公网IP:3000
+```
+
+如果你是在家用宽带下，很多情况下还要做端口转发。  
+如果运营商拦截入站连接，直接公网 IP 也可能访问不到，这时可以改用 Nginx、Cloudflare Tunnel，或者把项目部署到云服务器。
 
 ## Git 协作开发流程
 
