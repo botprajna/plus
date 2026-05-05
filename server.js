@@ -5,10 +5,6 @@ import OpenAI from 'openai';
 const app = express();
 const port = process.env.PORT || 3000;
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -24,6 +20,10 @@ app.post('/api/chat', async (req, res) => {
   }
 
   try {
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
+    });
+
     const response = await client.responses.create({
       model: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
       input: [
