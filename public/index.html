@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI API Web Starter</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="panel">
+        <div class="heading">
+          <p>AI API Web Starter</p>
+          <h1>网页接入 AI API 示例</h1>
+        </div>
+
+        <form id="chat-form" class="chat-form">
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            placeholder="输入你想问 AI 的内容..."
+            required
+          ></textarea>
+          <button id="send-button" type="submit">发送</button>
+        </form>
+
+        <article class="result" aria-live="polite">
+          <span>AI 回复</span>
+          <p id="reply">等待你的第一条消息。</p>
+        </article>
+      </section>
+    </main>
+
+    <script src="/script.js"></script>
+  </body>
+</html>
